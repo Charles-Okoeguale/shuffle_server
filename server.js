@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const authRoutes = require('./src/routes/authRoutes');
+const userRoutes = require('./src/routes/user'); 
 const sequelize = require('./src/config/sequelize');
 const User = require('./src/models/user');
 const Role = require('./src/models/role');
@@ -10,6 +11,7 @@ const Permission = require('./src/models/permission');
 const Inventory = require('./src/models/inventory');
 const Statistics = require('./src/models/statistics');
 const RolePermission = require('./src/models/rolePermission');
+const apiRoutes = require('./src/routes/index');
 
 async function syncDatabase() {
     try {
@@ -25,18 +27,19 @@ const app = express();
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
-
+app.use('/api', apiRoutes);
 app.use(cors());
 app.use(morgan('dev'));
-app.use(authRoutes); 
+
 
 
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
+
+
 const PORT = 3000;
-app.use('/api/login', authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

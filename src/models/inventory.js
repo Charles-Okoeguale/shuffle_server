@@ -74,8 +74,8 @@ const Inventory = sequelize.define('Inventory', {
     allowNull: true,  // Delivery date might be unknown for items still pending
   },
 }, {
-  tableName: 'inventory',  // Specifies the table name in the database
-  timestamps: true,       // We are not automatically tracking createdAt or updatedAt
+  tableName: 'inventory', 
+  timestamps: true,    
 });
 
 module.exports = Inventory;

@@ -8,7 +8,6 @@ exports.login = async (req, res) => {
   try {
     // Check if user exists using Sequelize
     const user = await User.findOne({ where: { email } });
-    console.log('email', user)
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid email' });
@@ -22,13 +21,11 @@ exports.login = async (req, res) => {
 
     // Retrieve all statistics from the 'Statistics' table using Sequelize
     const statistics = await Statistics.findAll();
-    console.log("stats:", statistics)
 
     // Generate a token with user info
     const token = jwt.sign(
       { userId: user.id, role: user.role },
       'hasbullah',
-      { expiresIn: '1h' }
     );
 
     // Send the token and statistics as response

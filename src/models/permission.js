@@ -23,7 +23,7 @@ const Permission = sequelize.define('Permission', {
   },
 }, {
   tableName: 'permissions',  // Specifies the table name in the database
-  timestamps: false,         // Disable automatic timestamps
+  timestamps: true,         // Disable automatic timestamps
 });
 
 module.exports = Permission;

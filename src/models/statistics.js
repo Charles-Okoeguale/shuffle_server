@@ -22,11 +22,6 @@ const Statistic = sequelize.define('Statistic', {
     allowNull: false,
   },
 
-  // Timestamp for when the statistic was last updated
-  updated_at: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW, // Default to current timestamp
-  },
 }, {
   tableName: 'statistics',  // Specifies the table name in the database
   timestamps: false, // We handle the `updated_at` manually (not automatic timestamps)
