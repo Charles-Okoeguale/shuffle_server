@@ -2,28 +2,24 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
 
 const Permission = sequelize.define('Permission', {
-  // Unique identifier for the permission
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
 
-  // Name of the permission (e.g., 'getorder', 'addorder')
-  permission_name: {
+  // Name of the permission (e.g., 'Inventory', 'User', etc.)
+  name: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    unique: true,
+    unique: true,  // Ensure permission names are unique
   },
 
-  // Description of the permission (optional)
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: true,  // Description can be null
+  // The 'can' field is now JSONB to store the permission structure
+  can: {
+    type: DataTypes.JSONB,  // Store the permissions (add, edit, delete) as JSON
+    allowNull: false,  // This is required
+    defaultValue: { add: false, edit: false, delete: false } // Default permission structure
   },
+
 }, {
   tableName: 'permissions',  // Specifies the table name in the database
-  timestamps: true,         // Disable automatic timestamps
+  timestamps: false,  // Disable automatic timestamps for this model
 });
 
 module.exports = Permission;

@@ -2,12 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
 
 const Inventory = sequelize.define('Inventory', {
-  // Unique identifier for the inventory item
-  id: {
-    type: DataTypes.INTEGER,  
-    primaryKey: true,          
-  },
-
   // Name of the item
   name: {
     type: DataTypes.STRING(100),

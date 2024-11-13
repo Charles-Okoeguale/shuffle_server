@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize'); // Import the Sequelize instance
 
-const Statistic = sequelize.define('Statistic', {
+const Statistics = sequelize.define('Statistics', {
   // Unique identifier for the statistic
   stat_id: {
     type: DataTypes.INTEGER,
@@ -24,7 +24,7 @@ const Statistic = sequelize.define('Statistic', {
 
 }, {
   tableName: 'statistics',  // Specifies the table name in the database
-  timestamps: false, // We handle the `updated_at` manually (not automatic timestamps)
+  timestamps: true, // We handle the `updated_at` manually (not automatic timestamps)
 });
 
-module.exports = Statistic;
+module.exports = Statistics;
