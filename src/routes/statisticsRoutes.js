@@ -5,7 +5,7 @@ const authenticate = require("../../src/middlewares/authenticate")
 const checkPermission = require('../../src/middlewares/checkPermission');
 
 router.get('/', authenticate, statisticsController.getAllStatistics);
-router.post('/add', authenticate, checkPermission('Statistics', 'add'), statisticsController.addStatistic);
+router.post('/add', authenticate, checkPermission('statistics.add'), statisticsController.addStatistic);
 
 
 module.exports = router;
