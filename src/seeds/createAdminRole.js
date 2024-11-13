@@ -24,5 +24,7 @@ const createAdminRole = async () => {
     console.error('Error creating Admin role:', error);
   }
 };
+createAdminRole()
 
-createAdminRole();
+// module.exports = createAdminRole;
+
