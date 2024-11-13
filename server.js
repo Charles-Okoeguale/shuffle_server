@@ -37,8 +37,6 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
-
-
 const PORT = 3000;
 
 app.listen(PORT, () => {
@@ -46,27 +44,3 @@ app.listen(PORT, () => {
 });
 
 syncDatabase();
-
-
-
-// Login endpoint --> 
-// get latest orders --> 
-// get Statistics --> 
-// get employees --> 
-// add new employee --> 
-// edit employee --> 
-// delete employee --> 
-// get inventory --> 
-// confirm order --> 
-// add new product --> 
-// edit product --> 
-// delete product --> 
-// get orders --> 
-// edit order --> 
-// get all roles --> 
-// Add new role --> 
-// Edit role --> 
-// Delete role --> 
-
-
-// model -->  statistics users inventory roles
