@@ -9,7 +9,7 @@ const roleRoutes = require("./roleRoutes")
 const router = express.Router();
 
 router.use('/login', authRoutes);
-router.use('/user', userRoutes);
+router.use('/user', userRoutes)
 router.use('/statistics', statsRoutes);
 router.use('/inventory', inventoryRoutes);
 router.use('/roles', roleRoutes);

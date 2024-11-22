@@ -2,41 +2,43 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 
 exports.addUser = async (req, res) => {
-  const { firstname, lastname, email, password, role } = req.body
+  const { firstname, lastname, email, password, role } = req.body;
 
   try {
-    // Validate incoming data (you can use your own validation logic or a library like Joi)
-    if (!email || !password || !role || !firstname || !lastname ) {
+    if (!email || !password || !role || !firstname || !lastname) {
       return res.status(400).json({ error: 'All fields are required.' });
     }
 
-    // Hash the password using bcrypt
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user in the database
     await User.create({
       email: email.toLowerCase(),
       password_hash: hashedPassword,
-      role: role.toLowerCase(), 
-      firstname: firstname.toLowerCase(), 
-      lastname: lastname.toLowerCase()
+      role: role.toLowerCase(),
+      firstname: firstname.toLowerCase(),
+      lastname: lastname.toLowerCase(),
     });
 
-    // Return the created user data (without sensitive info like password)
-    res.status(201).json({message: "Employee created succesfully"});
-
+    res.status(201).json({ message: 'Employee created successfully' });
   } catch (error) {
-    console.error(error);
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      const duplicateEmailError = error.errors.find(err => err.path === 'email');
+      if (duplicateEmailError) {
+        console.error('Duplicate email error:', duplicateEmailError.message);
+        return res.status(409).json({ error: 'Duplicate email: This email is already in use.' });
+      }
+    }
+    console.error('Server error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 };
 
 exports.getAllUsers = async (req, res) => {
   try {
-    // Fetch all users from the database
-    const users = await User.findAll();
-
-    // Send the users as a response
+    const users = await User.findAll({
+      attributes: { exclude: ['password_hash'] },
+    });
+    console.log(users)
     res.json({ users });
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -65,35 +67,24 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.editUser = async (req, res) => {
-  const { id } = req.params; // Get the 'id' from the URL parameters
-  const { firstname, lastname, email, role, password } = req.body; // Get data from the request body
-
+  const { id } = req.params;
+  const { firstname, lastname, email, role, password } = req.body; 
   try {
-    // Find the user by their ID
     const user = await User.findOne({ where: { id } });
-
-    // If the user does not exist, return a 404 error
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    // If a password is provided, hash it before saving
     if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with a salt round of 10
-      // Update the user's password along with other details
+      const hashedPassword = await bcrypt.hash(password, 10);
       const updatedUser = await user.update({
         firstname,
         lastname,
         email,
         role,
-        password_hash: hashedPassword, // Update the password hash in the database
+        password_hash: hashedPassword,
       });
-      
-      // Return the updated user as the response
       return res.json({ message: 'User updated successfully', user: updatedUser });
     }
-
-    // If no password is provided, update other fields
     const updatedUser = await user.update({
       firstname,
       lastname,
@@ -101,7 +92,6 @@ exports.editUser = async (req, res) => {
       role,
     });
 
-    // Return the updated user as the response
     res.json({ message: 'User updated successfully', user: updatedUser });
   } catch (error) {
     console.error('Error updating user:', error);
@@ -111,6 +101,7 @@ exports.editUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   const userId = req.params.id;
+  console.log(userId, 'userId')
 
   try {
     const user = await User.findByPk(userId);

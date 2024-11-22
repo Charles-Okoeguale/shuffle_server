@@ -10,14 +10,19 @@ const Role = require('./src/models/role');
 const Permission = require('./src/models/permission');
 const Inventory = require('./src/models/inventory');
 const Statistics = require('./src/models/statistics');
+const Orders = require('./src/models/orders');
 const RolePermission = require('./src/models/rolePermission');
 const apiRoutes = require('./src/routes/index');
 const createAdminRole = require("./src/seeds/createAdminRole")
-const addAdminUser = require("./src/seeds/createAdminUser")
+const addAdminUser = require("./src/seeds/createAdminUser");
+const seedStatistics = require('./src/seeds/createStats');
 
 async function syncDatabase() {
     try {
       await sequelize.authenticate();
+      await addAdminUser()
+      await seedStatistics()
+      await createAdminRole()
       await sequelize.sync({ force: false });
       console.log('All models were synchronized successfully.');
     } catch (err) {
@@ -27,13 +32,22 @@ async function syncDatabase() {
 
 const app = express();
 
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+  credentials: true, 
+}));
+
+
+
+app.options('*', cors());
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', apiRoutes);
-app.use(cors());
+
 app.use(morgan('dev'));
-
-
 
 app.get('/', (req, res) => {
   res.send('Hello, World!');

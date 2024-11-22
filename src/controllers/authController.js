@@ -2,35 +2,28 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Statistics = require('../models/statistics');
+const Roles = require("../models/role")
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;  
+  const email = req.body.email;
+  const password = req.body.password;
+
+  console.log(email, password)
+
   try {
-    // Check if user exists using Sequelize
     const user = await User.findOne({ where: { email } });
-
     if (!user) {
-      return res.status(401).json({ error: 'Invalid email' });
+      return res.status(401).json({ error: 'Email does not exist' });
     }
-
-    // Verify password using bcrypt
     const validPassword = await bcrypt.compare(password, user.password_hash);
     if (!validPassword) {
       return res.status(401).json({ error: 'Invalid password' });
     }
-
-    // Retrieve all statistics from the 'Statistics' table using Sequelize
-    const statistics = await Statistics.findAll();
-
-    // Generate a token with user info
     const token = jwt.sign(
-      { userId: user.id, role: user.role },
+      { userId: user.id, role: user.role, email: user.email },
       'hasbullah',
     );
-
-    // Send the token and statistics as response
-    res.json({ token, statistics });
-
+    res.json({ token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });

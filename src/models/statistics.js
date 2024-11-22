@@ -18,7 +18,7 @@ const Statistics = sequelize.define('Statistics', {
 
   // The value of the statistic (e.g., total amount spent, number of employees, etc.)
   value: {
-    type: DataTypes.DECIMAL(12, 2), // NUMERIC with 2 decimal places
+    type: DataTypes.DECIMAL(20, 2), // NUMERIC with 2 decimal places
     allowNull: false,
   },
 

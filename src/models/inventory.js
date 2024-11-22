@@ -1,14 +1,17 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, UUIDV4 } = require('sequelize');
 const sequelize = require('../config/sequelize');
 
 const Inventory = sequelize.define('Inventory', {
-  // Name of the item
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: UUIDV4,
+    primaryKey: true,
+  },
   name: {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
 
-  // Status of the item (e.g., 'pending')
   status: {
     type: DataTypes.STRING(20),
     allowNull: false,
@@ -17,7 +20,12 @@ const Inventory = sequelize.define('Inventory', {
   // Tracking ID for shipment
   tracking_id: {
     type: DataTypes.STRING(50),
-    allowNull: true,  // Tracking ID may not be present for every item
+    allowNull: false,  // Tracking ID may not be present for every item
+  },
+
+  shipping_mark: {
+    type: DataTypes.STRING(50),
+    allowNull: false,  
   },
 
   // Unit of measurement (e.g., 'Pieces')
@@ -30,6 +38,12 @@ const Inventory = sequelize.define('Inventory', {
   quantity: {
     type: DataTypes.INTEGER,
     allowNull: false,
+  },
+
+  card_charges: {
+    type: DataTypes.DECIMAL(12, 2),
+    allowNull: false,
+    defaultValue: 0.00,
   },
 
   // Price per unit of the item
@@ -52,7 +66,7 @@ const Inventory = sequelize.define('Inventory', {
 
   // Total amount paid (including shipping fees)
   total_paid: {
-    type: DataTypes.DECIMAL(12, 2),
+    type: DataTypes.DECIMAL(20, 2),
     allowNull: false,
   },
 
@@ -66,6 +80,15 @@ const Inventory = sequelize.define('Inventory', {
   date_of_delivery: {
     type: DataTypes.STRING(20),
     allowNull: true,  // Delivery date might be unknown for items still pending
+  },
+
+  user_id: {
+    type: DataTypes.UUID,
+    allowNull: false,  // Assuming every inventory must have a user linked to it
+    references: {
+      model: 'users',  
+      key: 'id',   
+    }
   },
 }, {
   tableName: 'inventory', 

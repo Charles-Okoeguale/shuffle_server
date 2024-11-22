@@ -1,3 +1,4 @@
+const { default: axios } = require('axios');
 const Statistics = require('../models/statistics');
 
 exports.getAllStatistics = async (req, res) => {
@@ -30,4 +31,20 @@ exports.addStatistic = async (req, res) => {
       console.error('Error adding statistics:', error);
       res.status(500).json({ error: 'Server error' });
     }
+};
+
+
+exports.getRates = async (req, res) => {
+  try {
+    const apiKey = process.env.API_KEY;
+    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD?base=USD&symbols=NGN`;
+
+    const response = await axios.get(url);
+    const exchangeRate = response.data;
+
+    res.json(exchangeRate);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to retrieve exchange rate' });
+  }
 };

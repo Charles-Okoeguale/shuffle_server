@@ -1,41 +1,41 @@
-const { DataTypes, Sequelize } = require('sequelize');
-const sequelize = require('../config/sequelize'); // Import the Sequelize instance
+const { DataTypes, Sequelize, UUIDV4} = require('sequelize');
+const sequelize = require('../config/sequelize'); 
 
 const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: UUIDV4,
+    primaryKey: true,
+  },
   firstname: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true, // Ensures that no two users can have the same username
   },
-
   lastname: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true, // Ensures that no two users can have the same username
   },
-
-  // Unique email for the user
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true, // Ensures that no two users can have the same email
+    unique: true,
   },
-
-  // Hashed password field
   password_hash: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-
-  // The role of the user (admin, user, etc.)
   role: {
-    type: DataTypes.ENUM('admin', 'product sorter', 'inventory manager', 'developer'), // You can add more roles as needed
+    type: DataTypes.STRING,
     allowNull: false,
   },
-
+  total_spent: {
+    type: DataTypes.DECIMAL(20, 2),
+    allowNull: false,
+    defaultValue: 0.0,
+  },
 }, {
-  tableName: 'users', // Specifies the table name in the database
-  timestamps: true,  // Disable automatic 'createdAt' and 'updatedAt' columns
+  tableName: 'users',
+  timestamps: true,
 });
 
 module.exports = User;
