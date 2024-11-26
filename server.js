@@ -16,6 +16,8 @@ const apiRoutes = require('./src/routes/index');
 const createAdminRole = require("./src/seeds/createAdminRole")
 const addAdminUser = require("./src/seeds/createAdminUser");
 const seedStatistics = require('./src/seeds/createStats');
+const createProductSorterRole = require('./src/seeds/createProductSorterRole');
+const createInventoryManagerRole = require('./src/seeds/createInventoryManagerRole');
 
 async function syncDatabase() {
     try {
@@ -23,6 +25,8 @@ async function syncDatabase() {
       await addAdminUser()
       await seedStatistics()
       await createAdminRole()
+      await createProductSorterRole();
+      await createInventoryManagerRole();
       await sequelize.sync({ force: false });
       console.log('All models were synchronized successfully.');
     } catch (err) {
@@ -40,9 +44,6 @@ app.use(cors({
 }));
 
 
-
-app.options('*', cors());
-
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', apiRoutes);
@@ -53,10 +54,7 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
-const PORT = 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
-
 syncDatabase();
+
+module.exports = app;
+
